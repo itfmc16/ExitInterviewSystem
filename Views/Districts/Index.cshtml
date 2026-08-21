@@ -1,0 +1,62 @@
+@model ExitInterviewSystem.Helpers.PagedResult<District>
+@{
+    ViewData["Title"] = "District";
+    var search = ViewBag.Search as string;
+}
+<div class="legacy-toolbar">
+    <div class="legacy-toolbar-left">
+        <span class="legacy-crumb">
+            <a asp-controller="Home" asp-action="Index" title="Home" class="legacy-home">&#8962;</a>
+            <span class="legacy-sep">/</span>
+            <span class="legacy-current">District</span>
+        </span>
+        <span class="legacy-tool-sep"></span>
+        <a href="javascript:window.print();" class="legacy-icon-btn" title="Print">&#128424;</a>
+        <a asp-action="ExportExcel" asp-route-search="@search" class="legacy-icon-btn" title="Export to Excel"><strong>X</strong></a>
+        <a asp-action="ExportWord" asp-route-search="@search" class="legacy-icon-btn" title="Export to Word"><strong>W</strong></a>
+        <a href="mailto:?subject=Districts" class="legacy-icon-btn" title="Email">&#9993;</a>
+        <a href="#searchBox" class="legacy-icon-btn" title="Search">&#128269;</a>
+        <a href="javascript:void(0)" class="legacy-icon-btn" title="Filter">&#9660;</a>
+    </div>
+</div>
+
+<form method="get" class="search-row" id="searchBox">
+    <input type="text" name="search" value="@search" placeholder="Search" />
+    <button type="submit" class="btn-search">Search</button>
+</form>
+
+@await Html.PartialAsync("_Pager", (ExitInterviewSystem.Helpers.IPagerInfo)Model)
+
+<div class="grid-toolbar" style="margin-bottom:8px;">
+    <a asp-action="Create" class="btn btn-save" title="Add District">+</a>
+</div>
+
+<table class="data-grid">
+    <thead>
+        <tr>
+            <th>District Name</th>
+            <th style="width:140px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Items.Any())
+        {
+            foreach (var d in Model.Items)
+            {
+                <tr>
+                    <td>@d.Name</td>
+                    <td>
+                        <a asp-controller="Institutions" asp-action="Index" asp-route-districtId="@d.Id"
+                           class="btn btn-outline-inst">Institutions</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="2" style="text-align:center;color:#666;padding:20px;">No districts found.</td>
+            </tr>
+        }
+    </tbody>
+</table>

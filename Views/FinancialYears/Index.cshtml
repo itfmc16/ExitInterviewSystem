@@ -1,0 +1,64 @@
+@model ExitInterviewSystem.Helpers.PagedResult<FinancialYear>
+@{
+    ViewData["Title"] = "Financial Years";
+}
+
+<div class="breadcrumb-inline">
+    <a asp-controller="Home" asp-action="Index" title="Home">&#127968;</a>
+    <span>/</span>
+    <span>Financial Years</span>
+</div>
+
+<div class="toolbar-icons">
+    <a href="javascript:window.print();" class="toolbar-btn" title="Print">&#128424;</a>
+    <a href="javascript:void(0)" class="toolbar-btn" title="Excel"><strong>X</strong></a>
+    <a href="javascript:void(0)" class="toolbar-btn" title="Word"><strong>W</strong></a>
+    <a href="mailto:?subject=Financial%20Years" class="toolbar-btn" title="Email">&#9993;</a>
+    <a href="#searchBox" class="toolbar-btn" title="Search">&#128269;</a>
+    <a href="javascript:void(0)" class="toolbar-btn" title="Filter">&#9660;</a>
+</div>
+
+<form method="get" class="search-row" id="searchBox">
+    <input type="text" name="search" value="@ViewBag.Search" placeholder="Search" />
+    <button type="submit" class="btn-search">Search</button>
+</form>
+
+<div class="grid-toolbar" style="margin-bottom:8px;">
+    <a asp-action="Create" class="btn btn-save" title="Add Year">+</a>
+</div>
+
+<table class="data-grid">
+    <thead>
+        <tr>
+            <th style="width:80px;">FYID</th>
+            <th>Financial Year</th>
+            <th style="width:160px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Items.Any())
+        {
+            foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td class="ul-actions">
+                        <a asp-action="Edit" asp-route-id="@item.Id" title="View">&#128269;</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" title="Edit">&#9998;</a>
+                        <a asp-action="Create" title="Copy">&#128203;</a>
+                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;"
+                              onsubmit="return confirm('Delete this financial year?');">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" title="Delete">&#128465;</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr><td colspan="3" style="text-align:center;color:#666;padding:20px;">No financial years found.</td></tr>
+        }
+    </tbody>
+</table>

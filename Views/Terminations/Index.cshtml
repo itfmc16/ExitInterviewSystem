@@ -1,0 +1,59 @@
+@model IEnumerable<TerminationType>
+@{
+    ViewData["Title"] = "Termination";
+}
+
+<div class="toolbar-icons">
+    <a href="javascript:window.print();" class="toolbar-btn" title="Print">&#128424;</a>
+    <a asp-action="ExportExcel" asp-route-search="@ViewBag.Search" class="toolbar-btn" title="Excel"><strong>X</strong></a>
+    <a asp-action="ExportWord" asp-route-search="@ViewBag.Search" class="toolbar-btn" title="Word"><strong>W</strong></a>
+    <a href="mailto:?subject=Termination%20Types" class="toolbar-btn" title="Email">&#9993;</a>
+    <a href="#searchBox" class="toolbar-btn" title="Search">&#128269;</a>
+    <a href="#searchBox" class="toolbar-btn" title="Filter">&#9660;</a>
+</div>
+
+<form method="get" class="search-row" id="searchBox">
+    <input type="text" name="search" value="@ViewBag.Search" placeholder="Search" style="min-width:220px;" />
+    <button type="submit" class="btn-search">Search</button>
+</form>
+
+<div class="grid-toolbar">
+    <a asp-action="Create" class="btn-add-row" title="Add">+</a>
+</div>
+
+<table class="data-grid">
+    <thead>
+        <tr>
+            <th style="width:140px;">Termination ID</th>
+            <th>Termination Type</th>
+            <th style="width:130px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td class="action-btns">
+                    <a asp-action="Details" asp-route-id="@item.Id" title="View">&#128269;</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" title="Edit">&#9998;</a>
+                    <a asp-action="Copy" asp-route-id="@item.Id" title="Copy">&#128203;</a>
+                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;" onsubmit="return confirm('Delete this termination type?');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" title="Delete">&#128465;</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="grid-toolbar" style="margin-top:8px;">
+    <a asp-action="Create" class="btn-add-row" title="Add">+</a>
+</div>
+
+@if (!Model.Any())
+{
+    <p style="color:#555;">No termination types found. Click <strong>+</strong> to add one.</p>
+}

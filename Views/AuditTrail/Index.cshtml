@@ -1,0 +1,70 @@
+@model ExitInterviewSystem.Helpers.PagedResult<AuditTrail>
+@{
+    ViewData["Title"] = "Audit Trail";
+    var search = ViewBag.Search as string ?? "";
+}
+
+<div class="breadcrumb-inline">
+    <a asp-controller="Home" asp-action="Index" title="Home">&#127968;</a>
+    <span>/</span>
+    <span>Audit Trail</span>
+</div>
+
+<div class="toolbar-icons">
+    <a href="javascript:window.print();" class="toolbar-btn" title="Print">&#128424;</a>
+    <a href="javascript:void(0)" class="toolbar-btn" title="Excel"><strong>X</strong></a>
+    <a href="javascript:void(0)" class="toolbar-btn" title="Word"><strong>W</strong></a>
+    <a href="mailto:?subject=Audit%20Trail" class="toolbar-btn" title="Email">&#9993;</a>
+    <a href="#searchBox" class="toolbar-btn" title="Search">&#128269;</a>
+    <a href="javascript:void(0)" class="toolbar-btn" title="Filter">&#9660;</a>
+</div>
+
+<form method="get" class="search-row" id="searchBox">
+    <input type="text" name="search" value="@search" placeholder="Search" />
+    <button type="submit" class="btn-search">Search</button>
+    @if (!string.IsNullOrWhiteSpace(search))
+    {
+        <a asp-action="Index" class="btn btn-cancel" style="padding:8px 14px;">Clear</a>
+    }
+</form>
+
+@await Html.PartialAsync("_Pager", (ExitInterviewSystem.Helpers.IPagerInfo)Model)
+
+<table class="data-grid">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Username</th>
+            <th>Action</th>
+            <th>Module</th>
+            <th>Record Id</th>
+            <th>Details</th>
+            <th>IP Address</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Items.Any())
+        {
+            foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.ActionDate.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td>@item.Username</td>
+                    <td>@item.Action</td>
+                    <td>@item.ModuleName</td>
+                    <td>@item.RecordId</td>
+                    <td>@item.Details</td>
+                    <td>@item.IPAddress</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="7" style="text-align:center;color:#666;padding:20px;">
+                    @(string.IsNullOrWhiteSpace(search) ? "No audit entries yet." : "No audit entries found matching your search.")
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

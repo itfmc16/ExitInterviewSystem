@@ -1,0 +1,40 @@
+@{
+    var currentPage = (int)(ViewBag.Page ?? 1);
+    var totalPages = (int)(ViewBag.TotalPages ?? 1);
+    var totalRecords = (int)(ViewBag.TotalRecords ?? 0);
+    var pageSize = (int)(ViewBag.PageSize ?? 20);
+    var search = ViewBag.Search as string;
+    var districtId = ViewBag.DistrictId as int?;
+    var fromRec = totalRecords == 0 ? 0 : ((currentPage - 1) * pageSize) + 1;
+    var toRec = Math.Min(currentPage * pageSize, totalRecords);
+    var action = ViewContext.RouteData.Values["action"]?.ToString() ?? "Index";
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+}
+<div class="ua-pager-bar" style="margin:12px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+    <div class="ua-pager" style="display:flex;align-items:center;gap:6px;">
+        <span>Page</span>
+        @if (currentPage > 1)
+        {
+            <a asp-action="@action" asp-controller="@controller" asp-route-search="@search" asp-route-districtId="@districtId" asp-route-page="1" class="ua-page-btn">&laquo;</a>
+            <a asp-action="@action" asp-controller="@controller" asp-route-search="@search" asp-route-districtId="@districtId" asp-route-page="@(currentPage - 1)" class="ua-page-btn">&lt;</a>
+        }
+        else
+        {
+            <span class="ua-page-btn disabled">&laquo;</span>
+            <span class="ua-page-btn disabled">&lt;</span>
+        }
+        <input type="text" value="@currentPage" class="ua-page-input" readonly style="width:40px;text-align:center;" />
+        @if (currentPage < totalPages)
+        {
+            <a asp-action="@action" asp-controller="@controller" asp-route-search="@search" asp-route-districtId="@districtId" asp-route-page="@(currentPage + 1)" class="ua-page-btn">&gt;</a>
+            <a asp-action="@action" asp-controller="@controller" asp-route-search="@search" asp-route-districtId="@districtId" asp-route-page="@totalPages" class="ua-page-btn">&raquo;</a>
+        }
+        else
+        {
+            <span class="ua-page-btn disabled">&gt;</span>
+            <span class="ua-page-btn disabled">&raquo;</span>
+        }
+        <span>of @totalPages</span>
+    </div>
+    <div class="ua-records">Records @fromRec to @toRec of @totalRecords</div>
+</div>

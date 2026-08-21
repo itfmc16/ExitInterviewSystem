@@ -1,0 +1,78 @@
+@model ExitInterviewForm
+@{
+    ViewData["Title"] = "Exit Form Details";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2><i class="bi bi-file-earmark-text"></i> Exit Form #@Model.Id</h2>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+        <a asp-action="Index" class="btn btn-secondary">Back</a>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-header bg-primary text-white">Personal Details</div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6"><strong>Name:</strong> @Model.Name</div>
+            <div class="col-md-3"><strong>Persal No:</strong> @Model.PersalNo</div>
+            <div class="col-md-3"><strong>ID No:</strong> @Model.IDNo</div>
+            <div class="col-md-3"><strong>DOB:</strong> @Model.DateOfBirth?.ToString("yyyy-MM-dd")</div>
+            <div class="col-md-3"><strong>Gender:</strong> @Model.Gender</div>
+            <div class="col-md-3"><strong>Race:</strong> @Model.Race</div>
+            <div class="col-md-3"><strong>Rank:</strong> @Model.Rank</div>
+            <div class="col-md-4"><strong>Post/Salary Level:</strong> @Model.PostSalaryLevel</div>
+            <div class="col-md-4"><strong>Date of Appointment:</strong> @Model.DateOfAppointment?.ToString("yyyy-MM-dd")</div>
+            <div class="col-md-4"><strong>Entry to Current Position:</strong> @Model.DateOfEntryToCurrentPosition?.ToString("yyyy-MM-dd")</div>
+            <div class="col-md-6"><strong>Institution:</strong> @(Model.Institution?.Name ?? Model.InstitutionOfficeComponent)</div>
+            <div class="col-md-3"><strong>Termination Date:</strong> @Model.DateOfTermination?.ToString("yyyy-MM-dd")</div>
+            <div class="col-md-3"><strong>Financial Year:</strong> @(Model.FinancialYear?.Name)</div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-header bg-primary text-white">Exit Information</div>
+    <div class="card-body">
+        <p><strong>Termination Type:</strong> @Model.TerminationType @(string.IsNullOrEmpty(Model.TerminationTypeOtherText) ? "" : $"({Model.TerminationTypeOtherText})")</p>
+        <p><strong>Main Reason for Leaving:</strong><br />@Model.MainReasonForLeaving</p>
+        <p><strong>Treated Fairly:</strong> @Model.TreatedFairly — @Model.TreatedFairlyReason</p>
+        <p><strong>Would Consider Returning:</strong> @Model.WouldConsiderReturning — @Model.WouldConsiderReturningReason</p>
+        <p><strong>Paid Adequate Salary:</strong> @Model.PaidAdequateSalary — @Model.PaidAdequateSalaryReason</p>
+        <p><strong>Conditions to Have Stayed:</strong><br />@Model.ConditionsToHaveStayed</p>
+        <p><strong>What Would You Change:</strong><br />@Model.WhatWouldYouChange</p>
+        <p><strong>Contributions Recognised:</strong> @Model.ContributionsRecognised — @Model.ContributionsRecognisedReason</p>
+        <p><strong>Understood Policies:</strong> @Model.UnderstoodPolicies — @Model.UnderstoodPoliciesReason</p>
+        <p><strong>Illegal Acts Witnessed:</strong><br />@Model.IllegalActsWitnessed</p>
+        <p><strong>Training Adequate:</strong> @Model.TrainingAdequate — @Model.TrainingAdequateReason</p>
+        <p><strong>Satisfied Working Conditions:</strong> @Model.SatisfiedWorkingConditions — @Model.SatisfiedWorkingConditionsReason</p>
+        <p><strong>Security Arrangements:</strong><br />@Model.SecurityArrangementsComment</p>
+        <p><strong>Morale Suggestions:</strong><br />@Model.MoraleSuggestions</p>
+        <p><strong>Liked Most:</strong><br />@Model.LikedMostAboutPosition</p>
+        <p><strong>Liked Least:</strong><br />@Model.LikedLeastAboutPosition</p>
+        <p><strong>Could Have Prevented Leaving:</strong> @Model.CouldHavePreventedLeaving — @Model.CouldHavePreventedLeavingReason</p>
+        <p><strong>Goals and Targets Clear:</strong> @Model.GoalsAndTargetsClear — @Model.GoalsAndTargetsClearReason</p>
+        <p><strong>Qualification/Skills Better Used:</strong> @Model.QualificationSkillsBetterUsed — @Model.QualificationSkillsBetterUsedReason</p>
+        <p><strong>General Comments:</strong><br />@Model.GeneralComments</p>
+        <hr />
+        <div style="margin:12px 0;">
+            <strong>Signature of exiting employee:</strong>
+            @if (!string.IsNullOrEmpty(Model.SignatureOfEmployee) && Model.SignatureOfEmployee.StartsWith("data:image"))
+            {
+                <div style="margin-top:8px;">
+                    <img src="@Model.SignatureOfEmployee" alt="Employee signature" class="signature-preview" />
+                </div>
+            }
+            else if (!string.IsNullOrEmpty(Model.SignatureOfEmployee))
+            {
+                <span>@Model.SignatureOfEmployee</span>
+            }
+            else
+            {
+                <span style="color:#888;">—</span>
+            }
+            <span style="margin-left:16px;"><strong>Date:</strong> @(Model.SignatureDate?.ToString("dd MMM yyyy") ?? "—")</span>
+        </div>
+        <p class="text-muted"><strong>Captured By:</strong> @Model.CapturedBy on @Model.DateCaptured.ToString("yyyy-MM-dd HH:mm")</p>
+    </div>
+</div>

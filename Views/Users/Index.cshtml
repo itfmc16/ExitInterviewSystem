@@ -1,0 +1,70 @@
+@model ExitInterviewSystem.Helpers.PagedResult<ApplicationUser>
+@{
+    ViewData["Title"] = "Users";
+    var search = ViewBag.Search as string ?? "";
+}
+
+<div class="breadcrumb-inline">
+    <a asp-controller="Home" asp-action="Index" title="Home">&#127968;</a>
+    <span>/</span>
+    <span>Users</span>
+</div>
+
+<div class="toolbar-icons">
+    <a href="javascript:window.print();" class="toolbar-btn" title="Print">&#128424;</a>
+    <a href="javascript:void(0)" class="toolbar-btn" title="Excel"><strong>X</strong></a>
+    <a href="javascript:void(0)" class="toolbar-btn" title="Word"><strong>W</strong></a>
+    <a href="mailto:?subject=Users" class="toolbar-btn" title="Email">&#9993;</a>
+    <a href="#searchBox" class="toolbar-btn" title="Search">&#128269;</a>
+    <a href="javascript:void(0)" class="toolbar-btn" title="Filter">&#9660;</a>
+</div>
+
+<form method="get" class="search-row" id="searchBox">
+    <input type="text" name="search" value="@search" placeholder="Search" />
+    <button type="submit" class="btn-search">Search</button>
+    @if (!string.IsNullOrWhiteSpace(search))
+    {
+        <a asp-action="Index" class="btn btn-cancel" style="padding:8px 14px;">Clear</a>
+    }
+</form>
+
+@await Html.PartialAsync("_Pager", (ExitInterviewSystem.Helpers.IPagerInfo)Model)
+
+<table class="data-grid">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Active</th>
+            <th>Last Login</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Items.Any())
+        {
+            foreach (var u in Model.Items)
+            {
+                <tr>
+                    <td>@u.UserName</td>
+                    <td>@(string.IsNullOrWhiteSpace(u.FullName) ? null : u.FullName)</td>
+                    <td>@(string.IsNullOrWhiteSpace(u.Email) ? null : u.Email)</td>
+                    <td>@(string.IsNullOrWhiteSpace(u.Department) ? null : u.Department)</td>
+                    <td>@(u.IsActive ? "Yes" : "No")</td>
+                    <td>@(u.LastLoginDate == default ? null : u.LastLoginDate.ToString("yyyy-MM-dd HH:mm:ss"))</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" style="text-align:center;color:#666;padding:20px;">
+                    @(string.IsNullOrWhiteSpace(search)
+                        ? "No users yet. Users appear after they log in with Active Directory."
+                        : "No users found matching your search.")
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

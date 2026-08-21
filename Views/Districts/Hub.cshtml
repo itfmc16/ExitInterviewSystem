@@ -1,0 +1,20 @@
+@{
+    ViewData["Title"] = "District & Institutions";
+}
+<div class="section-title">District &amp; Institutions</div>
+<p style="color:#555;margin-bottom:24px;">
+    Choose what you want to manage. Districts group facilities by region; Institutions are the individual hospitals, clinics and offices.
+</p>
+
+<div style="display:flex;flex-wrap:wrap;gap:24px;">
+    <a asp-controller="Districts" asp-action="Index" class="panel-box" style="text-decoration:none;color:inherit;min-width:260px;max-width:340px;display:block;transition:box-shadow .15s;">
+        <h3 style="margin-top:0;color:#159447;">Districts</h3>
+        <p style="color:#555;margin-bottom:16px;">View, add, edit and delete districts (eThekwini, uMgungundlovu, etc.).</p>
+        <span class="btn btn-save" style="display:inline-block;">Open Districts</span>
+    </a>
+    <a asp-controller="Institutions" asp-action="Index" class="panel-box" style="text-decoration:none;color:inherit;min-width:260px;max-width:340px;display:block;">
+        <h3 style="margin-top:0;color:#159447;">Institutions</h3>
+        <p style="color:#555;margin-bottom:16px;">View, add, edit and delete institutions linked to each district.</p>
+        <span class="btn btn-save" style="display:inline-block;">Open Institutions</span>
+    </a>
+</div>

@@ -1,0 +1,175 @@
+@model ExitInterviewSystem.Models.AdUser
+@{
+    ViewData["Title"] = "User Activation — Details";
+    var isActivated = (bool)(ViewBag.IsActivated ?? false);
+}
+
+<div class="ua-toolbar">
+    <div class="ua-toolbar-left">
+        <a asp-action="Index" class="ua-tool-btn" title="Back to list">&#8592;</a>
+        <a asp-controller="Home" asp-action="Index" class="ua-tool-btn" title="Home">&#8962;</a>
+        <span class="ua-tool-sep"></span>
+        <button type="button" class="ua-tool-btn" title="Print" onclick="window.print()">&#128424;</button>
+    </div>
+    <div class="ua-toolbar-right">
+        <span class="ua-breadcrumb-pill">
+            <a asp-controller="Home" asp-action="Index">&#8962;</a>
+            <span> / </span>
+            <a asp-action="Index">User Activation</a>
+            <span> / @Model.Username</span>
+        </span>
+    </div>
+</div>
+
+<div class="section-title">User Activation — AD Profile</div>
+
+<div class="ua-profile-header">
+    <div>
+        <h2 class="ua-profile-name">@(string.IsNullOrWhiteSpace(Model.DisplayName) ? Model.Username : Model.DisplayName)</h2>
+        <div class="ua-profile-meta">
+            <span class="ua-meta-item"><strong>Username:</strong> @Model.Username</span>
+            <span class="ua-meta-item"><strong>UPN:</strong> @Model.UserPrincipalName</span>
+            @if (Model.AccountStatus == "Enabled")
+            {
+                <span class="badge-enabled">AD Enabled</span>
+            }
+            else
+            {
+                <span class="badge-disabled">AD Disabled</span>
+            }
+            @if (isActivated)
+            {
+                <span class="badge-activated">Activated in system</span>
+            }
+            else
+            {
+                <span class="badge-not-activated">Not yet activated</span>
+            }
+        </div>
+    </div>
+    <div class="ua-profile-actions">
+        <form asp-action="Activate" method="post" style="display:inline;">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="username" value="@Model.Username" />
+            <button type="submit" class="btn btn-primary">
+                @(isActivated ? "Refresh from AD &amp; Keep Active" : "Activate User")
+            </button>
+        </form>
+        <a asp-action="Index" class="btn btn-cancel">Back to list</a>
+    </div>
+</div>
+
+<!-- ========== IDENTITY ========== -->
+<div class="ua-section">
+    <div class="ua-section-title">Identity</div>
+    <div class="ua-field-grid">
+        <div class="ua-field"><span class="ua-label">sAMAccountName</span><span class="ua-value">@OrDash(Model.Username)</span></div>
+        <div class="ua-field"><span class="ua-label">User Principal Name</span><span class="ua-value">@OrDash(Model.UserPrincipalName)</span></div>
+        <div class="ua-field"><span class="ua-label">CN (Common Name)</span><span class="ua-value">@OrDash(Model.Cn)</span></div>
+        <div class="ua-field"><span class="ua-label">Display Name</span><span class="ua-value">@OrDash(Model.DisplayName)</span></div>
+        <div class="ua-field"><span class="ua-label">Given Name (First Name)</span><span class="ua-value">@OrDash(Model.GivenName)</span></div>
+        <div class="ua-field"><span class="ua-label">Surname (Last Name)</span><span class="ua-value">@OrDash(Model.Surname)</span></div>
+        <div class="ua-field"><span class="ua-label">Initials</span><span class="ua-value">@OrDash(Model.Initials)</span></div>
+        <div class="ua-field ua-field-wide"><span class="ua-label">Distinguished Name</span><span class="ua-value ua-mono">@OrDash(Model.DistinguishedName)</span></div>
+    </div>
+</div>
+
+<!-- ========== CONTACT ========== -->
+<div class="ua-section">
+    <div class="ua-section-title">Contact</div>
+    <div class="ua-field-grid">
+        <div class="ua-field"><span class="ua-label">Email (mail)</span><span class="ua-value">@OrDash(Model.Email)</span></div>
+        <div class="ua-field"><span class="ua-label">Telephone</span><span class="ua-value">@OrDash(Model.Telephone)</span></div>
+        <div class="ua-field"><span class="ua-label">Mobile</span><span class="ua-value">@OrDash(Model.Mobile)</span></div>
+        <div class="ua-field"><span class="ua-label">IP Phone</span><span class="ua-value">@OrDash(Model.IpPhone)</span></div>
+        <div class="ua-field"><span class="ua-label">Fax</span><span class="ua-value">@OrDash(Model.Fax)</span></div>
+    </div>
+</div>
+
+<!-- ========== ORGANISATION ========== -->
+<div class="ua-section">
+    <div class="ua-section-title">Organisation / Job</div>
+    <div class="ua-field-grid">
+        <div class="ua-field"><span class="ua-label">Title (Job Title)</span><span class="ua-value">@OrDash(Model.Title)</span></div>
+        <div class="ua-field"><span class="ua-label">Department</span><span class="ua-value">@OrDash(Model.Department)</span></div>
+        <div class="ua-field"><span class="ua-label">Company</span><span class="ua-value">@OrDash(Model.Company)</span></div>
+        <div class="ua-field"><span class="ua-label">Office</span><span class="ua-value">@OrDash(Model.Office)</span></div>
+        <div class="ua-field"><span class="ua-label">Manager</span><span class="ua-value">@OrDash(Model.Manager)</span></div>
+        <div class="ua-field ua-field-wide"><span class="ua-label">Description</span><span class="ua-value">@OrDash(Model.Description)</span></div>
+        <div class="ua-field"><span class="ua-label">Street Address</span><span class="ua-value">@OrDash(Model.StreetAddress)</span></div>
+        <div class="ua-field"><span class="ua-label">City</span><span class="ua-value">@OrDash(Model.City)</span></div>
+        <div class="ua-field"><span class="ua-label">State / Province</span><span class="ua-value">@OrDash(Model.State)</span></div>
+        <div class="ua-field"><span class="ua-label">Postal Code</span><span class="ua-value">@OrDash(Model.PostalCode)</span></div>
+        <div class="ua-field"><span class="ua-label">Country</span><span class="ua-value">@OrDash(Model.Country)</span></div>
+    </div>
+</div>
+
+<!-- ========== EMPLOYEE IDS ========== -->
+<div class="ua-section">
+    <div class="ua-section-title">Employee Identifiers</div>
+    <div class="ua-field-grid">
+        <div class="ua-field"><span class="ua-label">Employee ID</span><span class="ua-value">@OrDash(Model.EmployeeId)</span></div>
+        <div class="ua-field"><span class="ua-label">Employee Number</span><span class="ua-value">@OrDash(Model.EmployeeNumber)</span></div>
+        <div class="ua-field"><span class="ua-label">Employee Type</span><span class="ua-value">@OrDash(Model.EmployeeType)</span></div>
+    </div>
+</div>
+
+<!-- ========== EXTENSION ATTRIBUTES (Persal etc.) ========== -->
+<div class="ua-section">
+    <div class="ua-section-title">Extension Attributes (extensionAttribute1–15)</div>
+    <p class="ua-hint">Persal and other custom fields are often stored in these attributes.</p>
+    <div class="ua-field-grid">
+        <div class="ua-field"><span class="ua-label">extensionAttribute1</span><span class="ua-value">@OrDash(Model.ExtensionAttribute1)</span></div>
+        <div class="ua-field"><span class="ua-label">extensionAttribute2</span><span class="ua-value">@OrDash(Model.ExtensionAttribute2)</span></div>
+        <div class="ua-field"><span class="ua-label">extensionAttribute3</span><span class="ua-value">@OrDash(Model.ExtensionAttribute3)</span></div>
+        <div class="ua-field"><span class="ua-label">extensionAttribute4</span><span class="ua-value">@OrDash(Model.ExtensionAttribute4)</span></div>
+        <div class="ua-field"><span class="ua-label">extensionAttribute5</span><span class="ua-value">@OrDash(Model.ExtensionAttribute5)</span></div>
+        <div class="ua-field"><span class="ua-label">extensionAttribute6</span><span class="ua-value">@OrDash(Model.ExtensionAttribute6)</span></div>
+        <div class="ua-field"><span class="ua-label">extensionAttribute7</span><span class="ua-value">@OrDash(Model.ExtensionAttribute7)</span></div>
+        <div class="ua-field"><span class="ua-label">extensionAttribute8</span><span class="ua-value">@OrDash(Model.ExtensionAttribute8)</span></div>
+        <div class="ua-field"><span class="ua-label">extensionAttribute9</span><span class="ua-value">@OrDash(Model.ExtensionAttribute9)</span></div>
+        <div class="ua-field"><span class="ua-label">extensionAttribute10</span><span class="ua-value">@OrDash(Model.ExtensionAttribute10)</span></div>
+        <div class="ua-field"><span class="ua-label">extensionAttribute11</span><span class="ua-value">@OrDash(Model.ExtensionAttribute11)</span></div>
+        <div class="ua-field"><span class="ua-label">extensionAttribute12</span><span class="ua-value">@OrDash(Model.ExtensionAttribute12)</span></div>
+        <div class="ua-field"><span class="ua-label">extensionAttribute13</span><span class="ua-value">@OrDash(Model.ExtensionAttribute13)</span></div>
+        <div class="ua-field"><span class="ua-label">extensionAttribute14</span><span class="ua-value">@OrDash(Model.ExtensionAttribute14)</span></div>
+        <div class="ua-field"><span class="ua-label">extensionAttribute15</span><span class="ua-value">@OrDash(Model.ExtensionAttribute15)</span></div>
+    </div>
+</div>
+
+<!-- ========== ACCOUNT ========== -->
+<div class="ua-section">
+    <div class="ua-section-title">Account Information</div>
+    <div class="ua-field-grid">
+        <div class="ua-field"><span class="ua-label">Account Status</span><span class="ua-value">@OrDash(Model.AccountStatus)</span></div>
+        <div class="ua-field"><span class="ua-label">When Created</span><span class="ua-value">@OrDash(Model.WhenCreated)</span></div>
+        <div class="ua-field"><span class="ua-label">When Changed</span><span class="ua-value">@OrDash(Model.WhenChanged)</span></div>
+        <div class="ua-field"><span class="ua-label">Logon Count</span><span class="ua-value">@(Model.LogonCount > 0 ? Model.LogonCount.ToString() : "—")</span></div>
+        <div class="ua-field"><span class="ua-label">Last Logon</span><span class="ua-value">@OrDash(Model.LastLogon)</span></div>
+    </div>
+</div>
+
+<!-- ========== GROUPS ========== -->
+<div class="ua-section">
+    <div class="ua-section-title">Group Membership (memberOf)</div>
+    <div class="ua-groups">
+        @if (string.IsNullOrWhiteSpace(Model.Groups))
+        {
+            <span class="ua-value">—</span>
+        }
+        else
+        {
+            var groups = Model.Groups.Split(new[] { "; " }, StringSplitOptions.RemoveEmptyEntries);
+            <ul class="ua-group-list">
+                @foreach (var g in groups)
+                {
+                    <li>@g</li>
+                }
+            </ul>
+        }
+    </div>
+</div>
+
+@functions {
+    string OrDash(string? v) => string.IsNullOrWhiteSpace(v) ? "—" : v;
+}

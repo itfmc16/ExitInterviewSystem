@@ -1,0 +1,128 @@
+@model ExitInterviewSystem.Helpers.PagedResult<ExitInterviewForm>
+@{
+    ViewData["Title"] = "Exit forms details";
+}
+<div class="panel-box" style="max-width:280px;margin-bottom:20px;padding:10px 16px;border:2px solid #159447;box-shadow:2px 2px 6px rgba(0,0,0,.2);">
+    <strong>Exit forms details</strong>
+</div>
+
+<!-- Toolbar: Print / Excel / Word / Email / Search / Filter -->
+<div class="toolbar-icons">
+    <a href="javascript:window.print();" class="toolbar-btn" title="Print">&#128424;</a>
+    <a asp-action="ExportExcel"
+       asp-route-institutionId="@ViewBag.InstitutionId"
+       asp-route-exitFrom="@ViewBag.ExitFrom"
+       asp-route-exitTo="@ViewBag.ExitTo"
+       asp-route-capturedFrom="@ViewBag.CapturedFrom"
+       asp-route-capturedTo="@ViewBag.CapturedTo"
+       asp-route-search="@ViewBag.Search"
+       class="toolbar-btn" title="Excel"><strong>X</strong></a>
+    <a asp-action="ExportWord"
+       asp-route-institutionId="@ViewBag.InstitutionId"
+       asp-route-exitFrom="@ViewBag.ExitFrom"
+       asp-route-exitTo="@ViewBag.ExitTo"
+       asp-route-capturedFrom="@ViewBag.CapturedFrom"
+       asp-route-capturedTo="@ViewBag.CapturedTo"
+       asp-route-search="@ViewBag.Search"
+       class="toolbar-btn" title="Word"><strong>W</strong></a>
+    <a href="mailto:?subject=Exit%20Interview%20Forms" class="toolbar-btn" title="Email">&#9993;</a>
+    <a href="#filterPanel" class="toolbar-btn" title="Search">&#128269;</a>
+    <a href="#filterPanel" class="toolbar-btn" title="Filter">&#9660;</a>
+</div>
+
+<form method="get" asp-action="Index" id="filterPanel" style="margin:18px 0 20px 0;">
+    <div class="form-row">
+        <span class="form-label">Institution <span class="required">contains</span></span>
+        <div class="form-control-wrap">
+            <select name="institutionId" class="form-select" style="max-width:420px;">
+                <option value="">Please select</option>
+                @if (ViewBag.Institutions != null)
+                {
+                    foreach (var item in (SelectList)ViewBag.Institutions)
+                    {
+                        if (item.Selected)
+                        {
+                            <option value="@item.Value" selected="selected">@item.Text</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-row">
+        <span class="form-label">Date of Exit <span class="required">between</span></span>
+        <div class="form-control-wrap" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <input type="date" name="exitFrom" value="@ViewBag.ExitFrom" placeholder="Date of Exit" style="max-width:180px;" />
+            <span>and</span>
+            <input type="date" name="exitTo" value="@ViewBag.ExitTo" placeholder="Date of Exit" style="max-width:180px;" />
+        </div>
+    </div>
+    <div class="form-row">
+        <span class="form-label">Date Captured <span class="required">between</span></span>
+        <div class="form-control-wrap" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <input type="date" name="capturedFrom" value="@ViewBag.CapturedFrom" placeholder="Date Captured" style="max-width:180px;" />
+            <span>and</span>
+            <input type="date" name="capturedTo" value="@ViewBag.CapturedTo" placeholder="Date Captured" style="max-width:180px;" />
+        </div>
+    </div>
+    <div class="search-row">
+        <input type="text" name="search" value="@ViewBag.Search" placeholder="Search" style="min-width:220px;" />
+        <button type="submit" class="btn-search">Search</button>
+        <a asp-action="Index" class="btn btn-cancel" style="padding:8px 14px;">Clear</a>
+    </div>
+</form>
+
+@await Html.PartialAsync("_Pager", (ExitInterviewSystem.Helpers.IPagerInfo)Model)
+
+<div class="grid-toolbar" style="justify-content:space-between;">
+    <span style="font-size:13px;color:#555;">Records: <strong>@Model.TotalCount</strong></span>
+    <a asp-action="Create" class="btn btn-save">+ ADD EXIT DETAILS</a>
+</div>
+
+<table class="data-grid">
+    <thead>
+        <tr>
+            <th style="width:90px;"></th>
+            <th>Institution</th>
+            <th>Full names</th>
+            <th>Persal number</th>
+            <th>Gender</th>
+            <th>Exit Type</th>
+            <th>Job Title</th>
+            <th>Date of Appointment</th>
+            <th>Date of Exit</th>
+            <th>Date Captured</th>
+            <th>status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td class="action-btns">
+                    <a asp-action="Details" asp-route-id="@item.Id" title="View">&#128269;</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" title="Edit">&#9998;</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" title="Delete">&#128465;</a>
+                </td>
+                <td>@(item.Institution?.Name ?? item.InstitutionOfficeComponent)</td>
+                <td>@item.Name</td>
+                <td>@item.PersalNo</td>
+                <td>@item.Gender</td>
+                <td>@item.TerminationType</td>
+                <td>@(item.Rank ?? item.PostSalaryLevel)</td>
+                <td>@item.DateOfAppointment?.ToString("yyyy-MM-dd")</td>
+                <td>@item.DateOfTermination?.ToString("yyyy-MM-dd")</td>
+                <td>@item.DateCaptured.ToString("yyyy-MM-dd")</td>
+                <td></td>
+            </tr>
+        }
+    </tbody>
+</table>
+@if (!Model.Items.Any())
+{
+    <p style="color:#555;margin-top:12px;">No exit interview forms found. Use <strong>+ ADD EXIT DETAILS</strong> to capture one.</p>
+}

@@ -1,0 +1,14 @@
+@model ExitInterviewForm
+@{
+    ViewData["Title"] = "Delete Exit Form";
+}
+<h2 class="text-danger">Delete Exit Interview Form</h2>
+<div class="alert alert-warning">
+    Are you sure you want to delete the exit form for <strong>@Model.Name</strong> (Persal: @Model.PersalNo)?
+</div>
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

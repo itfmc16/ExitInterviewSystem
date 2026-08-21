@@ -1,0 +1,63 @@
+@model LoginRequest
+@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Exit Interview Form System</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="site-banner-wrap">
+        <div class="site-banner">
+            <img src="~/images/kzn-health-banner.png" alt="KZN Department of Health" />
+        </div>
+    </div>
+
+    <div class="top-header">
+        <h1>EXIT INTERVIEW FORM SYSTEM</h1>
+    </div>
+
+    <div class="page-body" style="max-width:480px;margin:40px auto;">
+        <div class="section-title">Login</div>
+        <p style="color:#555;margin-bottom:20px;">Authenticate with Active Directory credentials</p>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="msg-error">@Html.ValidationSummary(false)</div>
+        }
+
+        <form asp-action="Login" method="post" class="panel-box">
+            @Html.AntiForgeryToken()
+            <div class="form-row">
+                <label asp-for="Username" class="form-label">Username</label>
+                <div class="form-control-wrap">
+                    <input asp-for="Username" type="text" autofocus placeholder="AD username" />
+                    <span asp-validation-for="Username" class="field-error"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <label asp-for="Password" class="form-label">Password</label>
+                <div class="form-control-wrap">
+                    <input asp-for="Password" type="password" placeholder="Password" />
+                    <span asp-validation-for="Password" class="field-error"></span>
+                </div>
+            </div>
+            <div class="button-row">
+                <button type="submit" class="btn btn-save">Login</button>
+            </div>
+        </form>
+        <p style="text-align:center;color:#888;font-size:12px;margin-top:16px;">
+            KZN Department of Health &mdash; Fighting Disease, Fighting Poverty, Giving Hope
+        </p>
+    </div>
+
+    <div class="bottom-footer">
+        &copy; @DateTime.Now.Year KZN Department of Health. All rights reserved.
+    </div>
+</body>
+</html>

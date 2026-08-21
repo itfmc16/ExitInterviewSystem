@@ -1,0 +1,38 @@
+@model Institution
+@{
+    ViewData["Title"] = "Edit Institution";
+}
+<h2>Edit Institution</h2>
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="DateCreated" />
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="DistrictId" class="form-label">District</label>
+        <select asp-for="DistrictId" class="form-select" asp-items="ViewBag.DistrictId">
+            <option value="">-- Select --</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label asp-for="InstitutionType" class="form-label"></label>
+        <input asp-for="InstitutionType" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Address" class="form-label"></label>
+        <input asp-for="Address" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="ContactNumber" class="form-label"></label>
+        <input asp-for="ContactNumber" class="form-control" />
+    </div>
+    <div class="form-check mb-3">
+        <input asp-for="IsActive" class="form-check-input" />
+        <label asp-for="IsActive" class="form-check-label"></label>
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

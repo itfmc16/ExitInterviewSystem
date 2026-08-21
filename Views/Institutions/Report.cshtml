@@ -1,0 +1,28 @@
+@model IEnumerable<Institution>
+@{
+    ViewData["Title"] = "Institution Report";
+}
+<div class="section-title">Institution Report</div>
+<table class="data-grid">
+    <thead>
+        <tr>
+            <th>District</th>
+            <th>Institution</th>
+            <th>Type</th>
+            <th>Contact</th>
+            <th>Active</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@(item.District?.Name)</td>
+                <td>@item.Name</td>
+                <td>@item.InstitutionType</td>
+                <td>@item.ContactNumber</td>
+                <td>@(item.IsActive ? "Yes" : "No")</td>
+            </tr>
+        }
+    </tbody>
+</table>

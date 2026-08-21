@@ -1,0 +1,15 @@
+@model TerminationType
+@{
+    ViewData["Title"] = "Termination Type Details";
+}
+<div class="section-title">Termination Type Details</div>
+<div class="panel-box">
+    <div class="form-row"><span class="form-label">Termination ID</span><div class="form-control-wrap">@Model.Id</div></div>
+    <div class="form-row"><span class="form-label">Termination Type</span><div class="form-control-wrap">@Model.Name</div></div>
+    <div class="form-row"><span class="form-label">Active</span><div class="form-control-wrap">@(Model.IsActive ? "Yes" : "No")</div></div>
+    <div class="form-row"><span class="form-label">Date Created</span><div class="form-control-wrap">@Model.DateCreated.ToString("yyyy-MM-dd")</div></div>
+    <div class="button-row">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-save">Edit</a>
+        <a asp-action="Index" class="btn btn-cancel">Back</a>
+    </div>
+</div>

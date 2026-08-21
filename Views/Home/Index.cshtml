@@ -1,0 +1,10 @@
+@{
+    ViewData["Title"] = "Home";
+}
+<div class="section-title">Welcome to the Exit Interview Form System</div>
+<p style="margin-bottom:20px;color:#555;">KZN Department of Health &mdash; Fighting Disease, Fighting Poverty, Giving Hope</p>
+
+<div style="display:flex;flex-wrap:wrap;gap:16px;margin-bottom:30px;">
+    <a asp-controller="ExitForms" asp-action="Create" class="btn btn-save">+ Capture Exit Form</a>
+    <a asp-controller="Resolutions" asp-action="Index" class="btn btn-save">Resolutions</a>
+</div>

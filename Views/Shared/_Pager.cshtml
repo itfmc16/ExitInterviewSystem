@@ -1,0 +1,52 @@
+@model ExitInterviewSystem.Helpers.IPagerInfo
+@{
+    // Shared pager: Page << < 1 > >> of N   Records X to Y of Z
+    var page = Model.Page;
+    var totalPages = Model.TotalPages;
+    var from = Model.FromRecord;
+    var to = Model.ToRecord;
+    var total = Model.TotalCount;
+    var action = ViewContext.RouteData.Values["action"]?.ToString() ?? "Index";
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+    // Preserve existing query string (search, districtId, etc.)
+    var qs = Context.Request.Query
+        .Where(kv => !string.Equals(kv.Key, "page", StringComparison.OrdinalIgnoreCase)
+                  && !string.Equals(kv.Key, "pageSize", StringComparison.OrdinalIgnoreCase))
+        .ToDictionary(kv => kv.Key, kv => kv.Value.ToString());
+}
+@if (total > 0)
+{
+    <div class="pager-bar">
+        <div class="pager-nav">
+            <span class="pager-label">Page</span>
+            <a class="pager-btn @(page <= 1 ? "disabled" : "")"
+               href="@(page <= 1 ? "#" : Url.Action(action, controller, Merge(qs, 1)))"
+               title="First">«</a>
+            <a class="pager-btn @(page <= 1 ? "disabled" : "")"
+               href="@(page <= 1 ? "#" : Url.Action(action, controller, Merge(qs, page - 1)))"
+               title="Previous">&lt;</a>
+            <input type="text" class="pager-page-input" value="@(page)" readonly />
+            <a class="pager-btn @(page >= totalPages ? "disabled" : "")"
+               href="@(page >= totalPages ? "#" : Url.Action(action, controller, Merge(qs, page + 1)))"
+               title="Next">&gt;</a>
+            <a class="pager-btn @(page >= totalPages ? "disabled" : "")"
+               href="@(page >= totalPages ? "#" : Url.Action(action, controller, Merge(qs, totalPages)))"
+               title="Last">»</a>
+            <span class="pager-of">of @totalPages</span>
+        </div>
+        <div class="pager-records">
+            Records @from to @to of @total
+        </div>
+    </div>
+}
+
+@functions {
+    private static object Merge(Dictionary<string, string> baseQs, int page)
+    {
+        var d = new Dictionary<string, object>();
+        foreach (var kv in baseQs)
+            d[kv.Key] = kv.Value;
+        d["page"] = page;
+        return d;
+    }
+}

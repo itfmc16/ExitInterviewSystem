@@ -1,0 +1,29 @@
+@model TerminationType
+@{
+    ViewData["Title"] = "Edit Termination Type";
+}
+<div class="section-title">Edit Termination Type</div>
+<form asp-action="Edit" method="post" class="panel-box">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="DateCreated" />
+    <div class="form-row">
+        <span class="form-label">Termination ID</span>
+        <div class="form-control-wrap"><strong>@Model.Id</strong></div>
+    </div>
+    <div class="form-row">
+        <span class="form-label">Termination Type <span class="required">*</span></span>
+        <div class="form-control-wrap">
+            <input asp-for="Name" />
+            <span asp-validation-for="Name" class="field-error"></span>
+        </div>
+    </div>
+    <div class="form-row">
+        <span class="form-label">Active</span>
+        <div class="form-control-wrap"><input asp-for="IsActive" type="checkbox" /></div>
+    </div>
+    <div class="button-row">
+        <button type="submit" class="btn btn-save">Update</button>
+        <a asp-action="Index" class="btn btn-cancel">Cancel</a>
+    </div>
+</form>

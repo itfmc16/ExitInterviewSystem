@@ -1,0 +1,131 @@
+@model List<ExitInterviewSystem.Models.AdUser>
+@{
+    ViewData["Title"] = "User Activation";
+    var search = (string)(ViewBag.Search ?? "");
+    var currentPage = (int)(ViewBag.Page ?? 1);
+    var pageSize = (int)(ViewBag.PageSize ?? 20);
+    var totalRecords = (int)(ViewBag.TotalRecords ?? 0);
+    var totalPages = (int)(ViewBag.TotalPages ?? 1);
+    var fromRec = totalRecords == 0 ? 0 : ((currentPage - 1) * pageSize) + 1;
+    var toRec = Math.Min(currentPage * pageSize, totalRecords);
+}
+
+<div class="breadcrumb-inline">
+    <a asp-controller="Home" asp-action="Index" title="Home">&#127968;</a>
+    <span>/</span>
+    <span>User Activation</span>
+</div>
+
+<div class="toolbar-icons">
+    <a href="javascript:window.print();" class="toolbar-btn" title="Print">&#128424;</a>
+    <a href="javascript:void(0)" class="toolbar-btn" title="Excel"><strong>X</strong></a>
+    <a href="javascript:void(0)" class="toolbar-btn" title="Word"><strong>W</strong></a>
+    <a href="mailto:?subject=User%20Activation" class="toolbar-btn" title="Email">&#9993;</a>
+    <a href="#searchBox" class="toolbar-btn" title="Search">&#128269;</a>
+    <a href="javascript:void(0)" class="toolbar-btn" title="Filter">&#9660;</a>
+</div>
+
+<form method="get" asp-action="Index" class="search-row" id="searchBox">
+    <input type="text" name="search" value="@search" placeholder="Search by username, name, surname or email" />
+    <button type="submit" class="btn-search">Search</button>
+    @if (!string.IsNullOrWhiteSpace(search))
+    {
+        <a asp-action="Index" class="btn btn-cancel" style="padding:8px 14px;">Clear</a>
+    }
+</form>
+
+@if (ViewBag.Error != null)
+{
+    <div class="msg-error">@ViewBag.Error</div>
+}
+
+<div class="pager-bar">
+    <div class="pager-nav">
+        <span class="pager-label">Page</span>
+        @if (currentPage > 1)
+        {
+            <a asp-action="Index" asp-route-search="@search" asp-route-page="1" class="pager-btn" title="First">«</a>
+            <a asp-action="Index" asp-route-search="@search" asp-route-page="@(currentPage - 1)" class="pager-btn" title="Previous">&lt;</a>
+        }
+        else
+        {
+            <span class="pager-btn disabled">«</span>
+            <span class="pager-btn disabled">&lt;</span>
+        }
+        <input type="text" class="pager-page-input" value="@currentPage" readonly />
+        @if (currentPage < totalPages)
+        {
+            <a asp-action="Index" asp-route-search="@search" asp-route-page="@(currentPage + 1)" class="pager-btn" title="Next">&gt;</a>
+            <a asp-action="Index" asp-route-search="@search" asp-route-page="@totalPages" class="pager-btn" title="Last">»</a>
+        }
+        else
+        {
+            <span class="pager-btn disabled">&gt;</span>
+            <span class="pager-btn disabled">»</span>
+        }
+        <span class="pager-of">of @totalPages</span>
+    </div>
+    <div class="pager-records">
+        Records @fromRec to @toRec of @totalRecords
+    </div>
+</div>
+
+<div class="table-wrap">
+    <table class="data-grid ua-grid">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Display Name</th>
+                <th>First Name</th>
+                <th>Surname</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Title</th>
+                <th>Office</th>
+                <th>Employee No.</th>
+                <th>Status</th>
+                <th style="min-width:120px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var u in Model)
+            {
+                <tr>
+                    <td>@u.Username</td>
+                    <td>@u.DisplayName</td>
+                    <td>@u.GivenName</td>
+                    <td>@u.Surname</td>
+                    <td>@u.Email</td>
+                    <td>@u.Department</td>
+                    <td>@u.Title</td>
+                    <td>@u.Office</td>
+                    <td>@(string.IsNullOrEmpty(u.EmployeeNumber) ? u.EmployeeId : u.EmployeeNumber)</td>
+                    <td>
+                        @if (u.AccountStatus == "Enabled")
+                        {
+                            <span class="badge-enabled">Enabled</span>
+                        }
+                        else
+                        {
+                            <span class="badge-disabled">Disabled</span>
+                        }
+                    </td>
+                    <td class="ua-actions">
+                        <a asp-action="Details" asp-route-id="@u.Username" class="btn-link">View / Activate</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="11" style="text-align:center;color:#666;padding:24px;">
+                    @(string.IsNullOrWhiteSpace(search) ? "No Active Directory users found." : "No users found matching your search.")
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

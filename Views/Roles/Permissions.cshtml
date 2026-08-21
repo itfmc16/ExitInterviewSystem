@@ -1,0 +1,57 @@
+@model List<UserLevelPermission>
+@{
+    ViewData["Title"] = "User Level Permissions";
+    var roleName = ViewBag.RoleName as string ?? "";
+    var roleId = ViewBag.RoleId as string ?? "";
+}
+<div class="breadcrumb-inline">
+    <a asp-controller="Home" asp-action="Index" title="Home">&#127968;</a>
+    <span>/</span>
+    <a asp-controller="Roles" asp-action="Index">User Levels</a>
+    <span>/</span>
+    <span>User Level Permissions</span>
+</div>
+
+<p style="margin:8px 0 16px 0;font-weight:600;">User Level: @roleName</p>
+
+<form method="post" asp-action="Permissions">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="roleId" value="@roleId" />
+
+    <table class="perm-table">
+        <thead>
+            <tr>
+                <th>Tables</th>
+                <th>Add/Copy</th>
+                <th>Delete</th>
+                <th>Edit</th>
+                <th>List</th>
+                <th>View</th>
+                <th>Search</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Model[i].TableName
+                        <input type="hidden" name="model[@i].TableName" value="@Model[i].TableName" />
+                        <input type="hidden" name="model[@i].RoleId" value="@roleId" />
+                    </td>
+                    <td><input type="checkbox" name="model[@i].CanAdd" value="true" @(Model[i].CanAdd ? "checked" : "") /></td>
+                    <td><input type="checkbox" name="model[@i].CanDelete" value="true" @(Model[i].CanDelete ? "checked" : "") /></td>
+                    <td><input type="checkbox" name="model[@i].CanEdit" value="true" @(Model[i].CanEdit ? "checked" : "") /></td>
+                    <td><input type="checkbox" name="model[@i].CanList" value="true" @(Model[i].CanList ? "checked" : "") /></td>
+                    <td><input type="checkbox" name="model[@i].CanView" value="true" @(Model[i].CanView ? "checked" : "") /></td>
+                    <td><input type="checkbox" name="model[@i].CanSearch" value="true" @(Model[i].CanSearch ? "checked" : "") /></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div style="margin-top:16px;display:flex;gap:10px;">
+        <button type="submit" class="btn btn-save">Update</button>
+        <a asp-action="Index" class="btn" style="background:#e0e0e0;color:#333;padding:8px 16px;border-radius:4px;text-decoration:none;">Cancel</a>
+    </div>
+</form>

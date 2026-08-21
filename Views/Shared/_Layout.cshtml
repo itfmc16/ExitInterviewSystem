@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Exit Interview Form System</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <div class="site-banner-wrap">
+        <div class="site-banner">
+            <img src="~/images/kzn-health-banner.png" alt="KZN Department of Health — Fighting Disease, Fighting Poverty, Giving Hope" />
+        </div>
+    </div>
+
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <div class="nav-bar nav-bar-top">
+            <a asp-controller="Home" asp-action="Index">Home</a>
+            <a asp-controller="Districts" asp-action="Index">District</a>
+            <a asp-controller="Institutions" asp-action="Index">Institutions</a>
+            <a asp-controller="ExitForms" asp-action="Index">Employee Exit Interview Form</a>
+            <a asp-controller="Terminations" asp-action="Index">Termination</a>
+            <a asp-controller="Users" asp-action="Index">Users</a>
+            <a asp-controller="UserActivation" asp-action="Index">User Activation</a>
+            <a asp-controller="AuditTrail" asp-action="Index">Audit Trail</a>
+            <a asp-controller="Resolutions" asp-action="Index">Resolutions</a>
+            <a asp-controller="Roles" asp-action="Index">User Levels</a>
+            <a asp-controller="FinancialYears" asp-action="Index">Financial Years</a>
+        </div>
+
+        <div class="nav-bar nav-bar-secondary">
+            <a asp-controller="Account" asp-action="ChangePassword">Change Password</a>
+            <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;margin:0;padding:0;">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="nav-logout-btn">Logout</button>
+            </form>
+        </div>
+    }
+
+    <div class="top-header">
+        <h1>EXIT INTERVIEW FORM SYSTEM</h1>
+    </div>
+
+    <div class="breadcrumb-bar">
+        <span class="home-icon">&#8962;</span>
+        <a asp-controller="Home" asp-action="Index">Home</a>
+        @if (ViewData["Title"] != null && ViewData["Title"]?.ToString() != "Home")
+        {
+            <span> &raquo; @ViewData["Title"]</span>
+        }
+    </div>
+
+    <div class="page-body">
+        @if (TempData["Success"] != null)
+        {
+            <div class="msg-success">@TempData["Success"]</div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="msg-error">@TempData["Error"]</div>
+        }
+        @RenderBody()
+    </div>
+
+    <div class="bottom-footer">
+        &copy; @ExitInterviewSystem.Helpers.AppTime.Now.Year KZN Department of Health. All rights reserved. &mdash; Fighting Disease, Fighting Poverty, Giving Hope
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

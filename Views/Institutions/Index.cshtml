@@ -1,0 +1,92 @@
+@model ExitInterviewSystem.Helpers.PagedResult<Institution>
+@{
+    ViewData["Title"] = "Institutions";
+    var search = ViewBag.Search as string;
+    var districtName = ViewBag.DistrictName as string ?? "";
+    var districtId = ViewBag.DistrictId as int?;
+}
+<div class="legacy-toolbar">
+    <div class="legacy-toolbar-left">
+        <span class="legacy-crumb">
+            <a asp-controller="Home" asp-action="Index" title="Home" class="legacy-home">&#8962;</a>
+            <span class="legacy-sep">/</span>
+            <a asp-controller="Districts" asp-action="Index">District</a>
+            <span class="legacy-sep">/</span>
+            <span class="legacy-current">Institutions</span>
+        </span>
+        <span class="legacy-tool-sep"></span>
+        <a href="javascript:window.print();" class="legacy-icon-btn" title="Print">&#128424;</a>
+        <a asp-action="ExportExcel" asp-route-search="@search" asp-route-districtId="@districtId" class="legacy-icon-btn" title="Export to Excel"><strong>X</strong></a>
+        <a asp-action="ExportWord" asp-route-search="@search" asp-route-districtId="@districtId" class="legacy-icon-btn" title="Export to Word"><strong>W</strong></a>
+        <a href="mailto:?subject=Institutions" class="legacy-icon-btn" title="Email">&#9993;</a>
+        <a href="#searchBox" class="legacy-icon-btn" title="Search">&#128269;</a>
+        <a href="javascript:void(0)" class="legacy-icon-btn" title="Filter">&#9660;</a>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(districtName))
+{
+    <div class="district-header-bar">
+        <span class="district-header-label">District Name</span>
+        <span class="district-header-value">@districtName</span>
+    </div>
+}
+
+<form method="get" class="search-row" id="searchBox">
+    @if (districtId.HasValue)
+    {
+        <input type="hidden" name="districtId" value="@districtId" />
+    }
+    <input type="text" name="search" value="@search" placeholder="Search" />
+    <button type="submit" class="btn-search">Search</button>
+    @if (!string.IsNullOrWhiteSpace(search))
+    {
+        <a asp-action="Index" asp-route-districtId="@districtId" class="btn btn-cancel" style="padding:8px 14px;">Clear</a>
+    }
+</form>
+
+@await Html.PartialAsync("_Pager", (ExitInterviewSystem.Helpers.IPagerInfo)Model)
+
+<div class="grid-toolbar" style="margin-bottom:8px;">
+    <a asp-action="Create" asp-route-districtId="@districtId" class="btn btn-save" title="Add Institution">+</a>
+</div>
+
+<table class="data-grid">
+    <thead>
+        <tr>
+            <th>Institutions Name</th>
+            <th style="width:90px;"></th>
+            <th style="width:180px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Items.Any())
+        {
+            foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td class="action-btns">
+                        <a asp-action="Edit" asp-route-id="@item.Id" title="Edit" class="icon-btn">&#9998;</a>
+                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;"
+                              onsubmit="return confirm('Delete this institution?');">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="districtId" value="@districtId" />
+                            <button type="submit" title="Delete" class="icon-btn">&#128465;</button>
+                        </form>
+                    </td>
+                    <td>
+                        <a asp-controller="ExitForms" asp-action="Index" asp-route-institutionId="@item.Id"
+                           class="btn btn-outline-inst">Employees Exit Form</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="3" style="text-align:center;color:#666;padding:20px;">No institutions found.</td>
+            </tr>
+        }
+    </tbody>
+</table>

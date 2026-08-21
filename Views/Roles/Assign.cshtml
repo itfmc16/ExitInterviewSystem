@@ -1,0 +1,22 @@
+@model AssignRoleViewModel
+@{
+    ViewData["Title"] = "Assign Role";
+}
+<h2>Assign Role to User</h2>
+<form asp-action="Assign" method="post">
+    @Html.AntiForgeryToken()
+    <div class="mb-3">
+        <label class="form-label">User</label>
+        <select asp-for="UserId" class="form-select" asp-items="Model.Users">
+            <option value="">-- Select User --</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Role</label>
+        <select asp-for="RoleName" class="form-select" asp-items="Model.Roles">
+            <option value="">-- Select Role --</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Assign</button>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</form>

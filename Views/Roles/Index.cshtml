@@ -1,0 +1,89 @@
+@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
+@{
+    ViewData["Title"] = "User Levels";
+    // Map known role names to stable display IDs matching the legacy system
+    var levelMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Anonymous"] = -2,
+        ["Administrator"] = -1,
+        ["Default"] = 0,
+        ["IT System Support"] = 1,
+        ["HR Institution"] = 2,
+        ["HR Institution Manager"] = 3,
+        ["HR District Manager"] = 4,
+        ["HR Head Office Manager"] = 5,
+        ["Activator"] = 6
+    };
+}
+<div class="breadcrumb-inline">
+    <a asp-controller="Home" asp-action="Index" title="Home">&#127968;</a>
+    <span>/</span>
+    <span>User Levels</span>
+</div>
+
+<div class="toolbar-icons">
+    <a href="javascript:window.print();" class="toolbar-btn" title="Print">&#128424;</a>
+    <a href="javascript:void(0)" class="toolbar-btn" title="Excel"><strong>X</strong></a>
+    <a href="javascript:void(0)" class="toolbar-btn" title="Word"><strong>W</strong></a>
+    <a href="mailto:?subject=User%20Levels" class="toolbar-btn" title="Email">&#9993;</a>
+    <a href="#searchBox" class="toolbar-btn" title="Search">&#128269;</a>
+    <a href="javascript:void(0)" class="toolbar-btn" title="Filter">&#9660;</a>
+</div>
+
+<form method="get" class="search-row" id="searchBox">
+    <input type="text" name="search" value="@ViewBag.Search" placeholder="Search" />
+    <button type="submit" class="btn-search">Search</button>
+</form>
+
+<div class="grid-toolbar" style="margin-bottom:8px;">
+    <a asp-action="Create" class="btn btn-save" title="Add User Level">+</a>
+</div>
+
+<table class="data-grid">
+    <thead>
+        <tr>
+            <th style="width:120px;">User Level ID</th>
+            <th>User Level Name</th>
+            <th style="width:200px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var ordered = Model
+                .Select(r => new {
+                    Role = r,
+                    LevelId = levelMap.TryGetValue(r.Name ?? "", out var id) ? id : 100
+                })
+                .OrderBy(x => x.LevelId)
+                .ThenBy(x => x.Role.Name);
+        }
+        @foreach (var item in ordered)
+        {
+            var r = item.Role;
+            var lid = item.LevelId == 100 ? "—" : item.LevelId.ToString();
+            <tr>
+                <td>@lid</td>
+                <td>@r.Name</td>
+                <td class="ul-actions">
+                    <a asp-action="Permissions" asp-route-id="@r.Id" title="View">&#128269;</a>
+                    <a asp-action="Permissions" asp-route-id="@r.Id" title="Edit">&#9998;</a>
+                    <a asp-action="Create" asp-route-copyFrom="@r.Name" title="Copy">&#128203;</a>
+                    @if (!string.Equals(r.Name, "Administrator", StringComparison.OrdinalIgnoreCase)
+                         && !string.Equals(r.Name, "Anonymous", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <form asp-action="Delete" asp-route-id="@r.Id" method="post" style="display:inline;"
+                              onsubmit="return confirm('Delete this user level?');">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" title="Delete">&#128465;</button>
+                        </form>
+                    }
+                    <a asp-action="Permissions" asp-route-id="@r.Id" title="Permissions">&#128100;</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="grid-toolbar" style="margin-top:8px;">
+    <a asp-action="Create" class="btn btn-save" title="Add User Level">+</a>
+</div>

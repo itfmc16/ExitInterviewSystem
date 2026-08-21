@@ -1,0 +1,398 @@
+@model ExitInterviewForm
+@{
+    ViewData["Title"] = "Capture Exit Form";
+}
+<form asp-action="Create" method="post" id="exitForm">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="msg-error"></div>
+
+    <!-- TAB STRIP -->
+    <div class="tab-strip">
+        <a href="javascript:void(0)" id="tabHeader1" class="tab-link active" onclick="showTab(1)">Personal Particulars</a>
+        <a href="javascript:void(0)" id="tabHeader2" class="tab-link" onclick="showTab(2)">Causes of Exit</a>
+        <a href="javascript:void(0)" id="tabHeader3" class="tab-link" onclick="showTab(3)">Causes of Exit Continued</a>
+    </div>
+
+    <!-- TAB 1: PERSONAL PARTICULARS -->
+    <div id="tabPanel1" class="tab-panel active">
+        <div class="form-row">
+            <div class="form-label">Full Name<span class="required">*</span></div>
+            <div class="form-control-wrap"><input asp-for="Name" placeholder="Full names" /></div>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Persal No.<span class="required">*</span></div>
+            <div class="form-control-wrap"><input asp-for="PersalNo" placeholder="Persal number" /></div>
+        </div>
+        <div class="form-row">
+            <div class="form-label">ID No.<span class="required">*</span></div>
+            <div class="form-control-wrap"><input asp-for="IDNo" placeholder="ID number" /></div>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Date of Birth<span class="required">*</span></div>
+            <div class="form-control-wrap"><input asp-for="DateOfBirth" type="date" /></div>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Post / Salary Level</div>
+            <div class="form-control-wrap"><input asp-for="PostSalaryLevel" placeholder="Post / Salary level" /></div>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Rank</div>
+            <div class="form-control-wrap"><input asp-for="Rank" placeholder="Rank" /></div>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Race<span class="required">*</span></div>
+            <div class="form-control-wrap">
+                <select asp-for="Race">
+                    <option value="">Please select</option>
+                    <option>African</option>
+                    <option>Coloured</option>
+                    <option>Indian</option>
+                    <option>White</option>
+                    <option>Other</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Gender<span class="required">*</span></div>
+            <div class="form-control-wrap radio-group">
+                <label><input type="radio" asp-for="Gender" value="Male" /> Male</label>
+                <label><input type="radio" asp-for="Gender" value="Female" /> Female</label>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Date of Appointment<span class="required">*</span></div>
+            <div class="form-control-wrap"><input asp-for="DateOfAppointment" type="date" /></div>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Date of Entry to Current Position</div>
+            <div class="form-control-wrap"><input asp-for="DateOfEntryToCurrentPosition" type="date" /></div>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Institution / Office / Component<span class="required">*</span></div>
+            <div class="form-control-wrap">
+                <select asp-for="InstitutionId" asp-items="ViewBag.InstitutionId">
+                    <option value="">Please select institution</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Institution name (if other)</div>
+            <div class="form-control-wrap"><input asp-for="InstitutionOfficeComponent" placeholder="Name of institution / office / component" /></div>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Date of Termination<span class="required">*</span></div>
+            <div class="form-control-wrap"><input asp-for="DateOfTermination" type="date" /></div>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Financial Year</div>
+            <div class="form-control-wrap">
+                <select asp-for="FinancialYearId" asp-items="ViewBag.FinancialYearId">
+                    <option value="">Please select</option>
+                </select>
+            </div>
+        </div>
+        <div class="button-row">
+            <button type="button" class="btn btn-next" onclick="showTab(2)">Next</button>
+            <a asp-action="Index" class="btn btn-cancel">Cancel</a>
+        </div>
+    </div>
+
+    <!-- TAB 2: CAUSES OF EXIT -->
+    <div id="tabPanel2" class="tab-panel">
+        <div class="section-title">2.1 Termination Type</div>
+        <div class="form-row">
+            <div class="form-control-wrap radio-group">
+                <label style="display:block;margin-bottom:6px;"><input type="radio" asp-for="TerminationType" value="Incapacity" /> Incapacity due to ill-health / injury</label>
+                <label style="display:block;margin-bottom:6px;"><input type="radio" asp-for="TerminationType" value="Retirement" /> Retirement</label>
+                <label style="display:block;margin-bottom:6px;"><input type="radio" asp-for="TerminationType" value="Resignation" /> Resignation</label>
+                <label style="display:block;margin-bottom:6px;"><input type="radio" asp-for="TerminationType" value="EISP" /> Employee Initiated Severance Package</label>
+                <label style="display:block;margin-bottom:6px;"><input type="radio" asp-for="TerminationType" value="Other" /> Other</label>
+            </div>
+        </div>
+        <div class="form-row sub-question">
+            <div class="form-label">If Other, please specify</div>
+            <div class="form-control-wrap"><input asp-for="TerminationTypeOtherText" /></div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-label">2.2 What is your main reason for leaving?</div>
+            <div class="form-control-wrap"><textarea asp-for="MainReasonForLeaving" rows="3"></textarea></div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-label">2.2.1 Were you treated fairly?</div>
+            <div class="form-control-wrap radio-group">
+                <label><input type="radio" asp-for="TreatedFairly" value="Yes" /> Yes</label>
+                <label><input type="radio" asp-for="TreatedFairly" value="No" /> No</label>
+            </div>
+        </div>
+        <div class="form-row sub-question">
+            <div class="form-label">If no, state reason</div>
+            <div class="form-control-wrap"><textarea asp-for="TreatedFairlyReason" rows="2"></textarea></div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-label">2.3 Would you consider coming back?</div>
+            <div class="form-control-wrap radio-group">
+                <label><input type="radio" asp-for="WouldConsiderReturning" value="Yes" /> Yes</label>
+                <label><input type="radio" asp-for="WouldConsiderReturning" value="No" /> No</label>
+            </div>
+        </div>
+        <div class="form-row sub-question">
+            <div class="form-label">If no, state reason</div>
+            <div class="form-control-wrap"><textarea asp-for="WouldConsiderReturningReason" rows="2"></textarea></div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-label">2.4 Were you paid an adequate salary?</div>
+            <div class="form-control-wrap radio-group">
+                <label><input type="radio" asp-for="PaidAdequateSalary" value="Yes" /> Yes</label>
+                <label><input type="radio" asp-for="PaidAdequateSalary" value="No" /> No</label>
+            </div>
+        </div>
+        <div class="form-row sub-question">
+            <div class="form-label">If no, state reason</div>
+            <div class="form-control-wrap"><textarea asp-for="PaidAdequateSalaryReason" rows="2"></textarea></div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-label">2.5 Under what conditions would you have stayed?</div>
+            <div class="form-control-wrap"><textarea asp-for="ConditionsToHaveStayed" rows="3"></textarea></div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-label">2.6 If you were to change anything in the Department, what would you change?</div>
+            <div class="form-control-wrap"><textarea asp-for="WhatWouldYouChange" rows="3"></textarea></div>
+        </div>
+
+        <div class="button-row">
+            <button type="button" class="btn btn-back" onclick="showTab(1)">Back</button>
+            <button type="button" class="btn btn-next" onclick="showTab(3)">Next</button>
+            <a asp-action="Index" class="btn btn-cancel">Cancel</a>
+        </div>
+    </div>
+
+    <!-- TAB 3: CAUSES OF EXIT CONTINUED -->
+    <div id="tabPanel3" class="tab-panel">
+        <div class="form-row">
+            <div class="form-label">2.6.1 Did management adequately recognise your contributions?</div>
+            <div class="form-control-wrap radio-group">
+                <label><input type="radio" asp-for="ContributionsRecognised" value="Yes" /> Yes</label>
+                <label><input type="radio" asp-for="ContributionsRecognised" value="No" /> No</label>
+            </div>
+        </div>
+        <div class="form-row sub-question">
+            <div class="form-label">If no, state reason</div>
+            <div class="form-control-wrap"><textarea asp-for="ContributionsRecognisedReason" rows="2"></textarea></div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-label">2.6.2 Did you understand departmental policies and the reasons for them?</div>
+            <div class="form-control-wrap radio-group">
+                <label><input type="radio" asp-for="UnderstoodPolicies" value="Yes" /> Yes</label>
+                <label><input type="radio" asp-for="UnderstoodPolicies" value="No" /> No</label>
+            </div>
+        </div>
+        <div class="form-row sub-question">
+            <div class="form-label">If no, state reason</div>
+            <div class="form-control-wrap"><textarea asp-for="UnderstoodPoliciesReason" rows="2"></textarea></div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-label">2.6.3 Have you seen any illegal acts taking place within the department?</div>
+            <div class="form-control-wrap"><textarea asp-for="IllegalActsWitnessed" rows="2"></textarea></div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-label">2.7 Was your training adequate?</div>
+            <div class="form-control-wrap radio-group">
+                <label><input type="radio" asp-for="TrainingAdequate" value="Yes" /> Yes</label>
+                <label><input type="radio" asp-for="TrainingAdequate" value="No" /> No</label>
+            </div>
+        </div>
+        <div class="form-row sub-question">
+            <div class="form-label">If no, state reason</div>
+            <div class="form-control-wrap"><textarea asp-for="TrainingAdequateReason" rows="2"></textarea></div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-label">2.8 Were you satisfied with your working conditions?</div>
+            <div class="form-control-wrap radio-group">
+                <label><input type="radio" asp-for="SatisfiedWorkingConditions" value="Yes" /> Yes</label>
+                <label><input type="radio" asp-for="SatisfiedWorkingConditions" value="No" /> No</label>
+            </div>
+        </div>
+        <div class="form-row sub-question">
+            <div class="form-label">If no, state reason</div>
+            <div class="form-control-wrap"><textarea asp-for="SatisfiedWorkingConditionsReason" rows="2"></textarea></div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-label">2.8.1 Are security arrangements appropriate? If not, how could they be improved?</div>
+            <div class="form-control-wrap"><textarea asp-for="SecurityArrangementsComment" rows="2"></textarea></div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-label">2.9 Suggestions for improving employee morale</div>
+            <div class="form-control-wrap"><textarea asp-for="MoraleSuggestions" rows="2"></textarea></div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-label">2.10(a) What did you like most about your position?</div>
+            <div class="form-control-wrap"><textarea asp-for="LikedMostAboutPosition" rows="2"></textarea></div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-label">2.10(b) What did you like least about your position?</div>
+            <div class="form-control-wrap"><textarea asp-for="LikedLeastAboutPosition" rows="2"></textarea></div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-label">2.11 Could anything have been done to prevent you from leaving?</div>
+            <div class="form-control-wrap radio-group">
+                <label><input type="radio" asp-for="CouldHavePreventedLeaving" value="Yes" /> Yes</label>
+                <label><input type="radio" asp-for="CouldHavePreventedLeaving" value="No" /> No</label>
+            </div>
+        </div>
+        <div class="form-row sub-question">
+            <div class="form-label">If no, state reason</div>
+            <div class="form-control-wrap"><textarea asp-for="CouldHavePreventedLeavingReason" rows="2"></textarea></div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-label">2.12 Were the goals and targets of your role clear?</div>
+            <div class="form-control-wrap radio-group">
+                <label><input type="radio" asp-for="GoalsAndTargetsClear" value="Yes" /> Yes</label>
+                <label><input type="radio" asp-for="GoalsAndTargetsClear" value="No" /> No</label>
+            </div>
+        </div>
+        <div class="form-row sub-question">
+            <div class="form-label">If no, state reason</div>
+            <div class="form-control-wrap"><textarea asp-for="GoalsAndTargetsClearReason" rows="2"></textarea></div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-label">2.13 Could your qualifications and skills have been used to better advantage?</div>
+            <div class="form-control-wrap radio-group">
+                <label><input type="radio" asp-for="QualificationSkillsBetterUsed" value="Yes" /> Yes</label>
+                <label><input type="radio" asp-for="QualificationSkillsBetterUsed" value="No" /> No</label>
+            </div>
+        </div>
+        <div class="form-row sub-question">
+            <div class="form-label">If no, state reason</div>
+            <div class="form-control-wrap"><textarea asp-for="QualificationSkillsBetterUsedReason" rows="2"></textarea></div>
+        </div>
+
+        <div class="section-title">General Comments</div>
+        <div class="form-row">
+            <div class="form-control-wrap"><textarea asp-for="GeneralComments" rows="4"></textarea></div>
+        </div>
+
+                <div class="section-title">Sign-off</div>
+        <div class="form-row">
+            <div class="form-label">Signature of exiting employee</div>
+            <div class="form-control-wrap">
+                <div class="sig-adobe">
+                    <div class="sig-adobe-header">
+                        <strong>Add signature</strong>
+                        <span class="sig-choose">Choose input type: Type your name, draw with a mouse or finger, or upload an image of your physical signature.</span>
+                    </div>
+                    <div class="sig-mode-tabs">
+                        <button type="button" class="sig-mode-btn active" data-mode="type">
+                            <span class="sig-mode-icon">Aa</span>Type
+                        </button>
+                        <button type="button" class="sig-mode-btn" data-mode="draw">
+                            <span class="sig-mode-icon">&#9998;</span>Draw
+                        </button>
+                        <button type="button" class="sig-mode-btn" data-mode="upload">
+                            <span class="sig-mode-icon">&#128206;</span>Image
+                        </button>
+                    </div>
+
+                    <div class="sig-panel active" data-mode="type">
+                        <p class="sig-panel-hint">Type your full name. It will appear in a handwriting-style font.</p>
+                        <input type="text" class="sig-type-input" placeholder="Type your name here" autocomplete="off" />
+                        <div class="sig-type-row">
+                            <label style="font-size:12px;color:#555;">Style
+                                <select class="sig-type-font">
+                                    <option value="'Brush Script MT', 'Segoe Script', cursive">Script</option>
+                                    <option value="'Lucida Handwriting', cursive">Handwriting</option>
+                                    <option value="Georgia, serif">Formal</option>
+                                    <option value="'Segoe UI', Arial, sans-serif">Plain</option>
+                                </select>
+                            </label>
+                            <button type="button" class="btn btn-save sig-type-apply" style="padding:6px 14px;font-size:12px;">Apply</button>
+                        </div>
+                    </div>
+
+                    <div class="sig-panel" data-mode="draw">
+                        <p class="sig-panel-hint">Draw your signature with a mouse, trackpad, or finger on a touch screen.</p>
+                        <canvas id="employeeSignatureCanvas" class="signature-canvas" width="500" height="160"
+                                aria-label="Signature of exiting employee"></canvas>
+                    </div>
+
+                    <div class="sig-panel" data-mode="upload">
+                        <p class="sig-panel-hint">Upload a photo or scan of your physical signature (PNG, JPG, GIF or WebP, max 2&nbsp;MB).</p>
+                        <div class="sig-upload-drop">
+                            <div>Select an image of your signature</div>
+                            <input type="file" class="sig-upload-input" accept="image/png,image/jpeg,image/gif,image/webp" />
+                        </div>
+                        <img class="sig-upload-preview" alt="Uploaded signature preview" />
+                    </div>
+
+                    <div class="sig-footer-bar">
+                        <span>Signature is stored with this exit form</span>
+                        <button type="button" class="btn-sig-clear" data-sig-clear="employeeSignatureCanvas">Clear signature</button>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="SignatureOfEmployee" id="SignatureOfEmployee" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Date</div>
+            <div class="form-control-wrap"><input asp-for="SignatureDate" type="date" /></div>
+        </div>
+
+        <div class="button-row">
+            <button type="button" class="btn btn-back" onclick="showTab(2)">Back</button>
+            <button type="submit" class="btn btn-save">Save</button>
+            <a asp-action="Index" class="btn btn-cancel">Cancel</a>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+
+<script src="~/js/signature-pad.js" asp-append-version="true"></script>
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        window.initSignaturePad('employeeSignatureCanvas', 'SignatureOfEmployee');
+    });
+    // Ensure signature is saved before submit
+    document.querySelector('form') && document.querySelector('form').addEventListener('submit', function () {
+        var canvas = document.getElementById('employeeSignatureCanvas');
+        var input = document.getElementById('SignatureOfEmployee');
+        if (canvas && input) {
+            // If canvas has content, refresh hidden field
+            try {
+                var blank = document.createElement('canvas');
+                blank.width = canvas.width;
+                blank.height = canvas.height;
+                if (canvas.toDataURL() !== blank.toDataURL()) {
+                    input.value = canvas.toDataURL('image/png');
+                }
+            } catch (e) { }
+        }
+    });
+</script>
+
+<script type="text/javascript">
+    function showTab(tabNumber) {
+        for (var i = 1; i <= 3; i++) {
+            document.getElementById('tabPanel' + i).classList.toggle('active', i === tabNumber);
+            document.getElementById('tabHeader' + i).classList.toggle('active', i === tabNumber);
+        }
+        window.scrollTo(0, 0);
+    }
+</script>
+}
